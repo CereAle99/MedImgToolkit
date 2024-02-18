@@ -54,6 +54,6 @@ def crop_spine_from_ct(input_nifti, mask, shape="original", segmentation_value=1
 
     # Save cut image in a NIfTI file
     crop_image = nib.Nifti1Image(cut_image, input_nifti.affine, input_nifti.header)
-    segm_aligned = nib.Nifti1Image(segmentation, input_nifti.affine, input_nifti.header)
+    segm = nib.Nifti1Image(segmentation, input_nifti.affine, input_nifti.header)
 
-    return crop_image, segm_aligned
+    return crop_image, segm
