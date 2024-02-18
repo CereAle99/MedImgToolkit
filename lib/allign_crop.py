@@ -1,5 +1,5 @@
 import nibabel as nib
-from lib.align_images import pet_compatible_to_ct
+from lib.align_images import align_images
 from lib.fill_holes import fill_spinal_holes
 from lib.dilate import dilate_spine
 from lib.cylinder import spine_as_cylinder
@@ -43,7 +43,7 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, 
     print("done shaping")
 
     # Make PET image and spine segmentation image compatibles
-    resized_pet, resized_mask = pet_compatible_to_ct(input_nifti, mask)
+    resized_pet, resized_mask = align_images(input_nifti, mask)
     print("done resizing")
 
     # Put the segmentation into a numpy array

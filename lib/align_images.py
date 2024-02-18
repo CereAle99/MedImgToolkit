@@ -3,7 +3,7 @@ import nibabel as nib
 from scipy.ndimage import zoom, shift
 
 
-def pet_compatible_to_ct(pet_nifti, ct_nifti):
+def align_images(pet_nifti, ct_nifti):
     """
 
     Args:
