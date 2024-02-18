@@ -6,7 +6,7 @@ from lib.cylinder import spine_as_cylinder
 from lib.binarize import binarize
 
 
-def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41):
+def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, f_dilations=3, f_dim=3, d_dilations=3, d_filling=True, c_dilations=3):
     """
 
     Args:
@@ -14,6 +14,11 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
         mask:
         shape:
         segmentation_value:
+        f_dilations:
+        f_dim:
+        d_dilations:
+        d_filling:
+        c_dilations:
 
     Returns:
 
@@ -24,13 +29,13 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=41)
     # Apply shape function on segmentation
     if shape == "fill_holes":
         print(shape)
-        mask = fill_spinal_holes(mask, 3, 3)
+        mask = fill_spinal_holes(mask, f_dilations, f_dim)
     elif shape == "dilation":
         print(shape)
-        mask = dilate_spine(mask, 3, True)
+        mask = dilate_spine(mask, d_dilations, d_filling)
     elif shape == "cylinder":
         print(shape)
-        mask = spine_as_cylinder(mask, 3)
+        mask = spine_as_cylinder(mask, c_dilations)
     elif shape == "original":
         print(shape)
     else:
