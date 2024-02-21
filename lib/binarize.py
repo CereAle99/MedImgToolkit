@@ -1,7 +1,7 @@
 import nibabel as nib
 
 
-def binarize(input_image, label):
+def binarize(input_image, label=1):
     """
     Binarize a nibabel (nib) images. All the grey values in the image which level
     is equal to the label are put to 1, all the others are put to 0. 
@@ -10,7 +10,7 @@ def binarize(input_image, label):
         input_image: nib
             imput object of the image to be binarized
         label: float or int
-            label of the voxels that has to be put to 1
+            label of the voxels that has to be put to 1. Default is 1
 
     Returns: 
         aligned_input: nib
