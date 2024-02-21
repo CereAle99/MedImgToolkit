@@ -5,7 +5,7 @@ from lib.dilate import dilate_spine
 
 def cylinder(input_image, dilations=0):
     """
-    Takes a nibabel image representing a binary mask and encloses it in a vertical
+    Takes a nibabel 3D image representing a binary mask and encloses it in a vertical
     cylinder made of 1 values. Previously a dilation of the original binary mask
     may be performed setting the parameter "dilations".
     Args:
