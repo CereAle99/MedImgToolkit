@@ -5,7 +5,7 @@ from scipy.ndimage import zoom, shift
 
 def align_images(input_image, reference_image):
     """
-    Align two nibabel (nib) images with different resolution and pixel-size but spatially registered. 
+    Aligns two nibabel (nib) images with different resolution and pixel-size but spatially registered. 
     The function keep the pixel-size of the reference_image and change the resoluition into 
     a common resolution between the two images in order to align the images' voxels. 
     
