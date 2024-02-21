@@ -10,7 +10,7 @@ def binarize(input_image, label):
         input_image: nib
             imput object of the image to be binarized
         label: float or int
-            label of the voxel that has to be put to 1
+            label of the voxels that has to be put to 1
 
     Returns: 
         aligned_input: nib
