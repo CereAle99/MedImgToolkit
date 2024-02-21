@@ -26,7 +26,7 @@ def fill_holes(input_nifti, dim=3, n_dilations=None):
 
 
     Returns: nib
-        nibabel object representing the binary mask enclosed in a cilinder
+        nibabel object representing the binary mask after teh shaping
 
     """
 

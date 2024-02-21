@@ -26,7 +26,7 @@ def dilate(imput_image, iterations=1, fill=False, dim=3, n_dilations=None):
 
 
     Returns: nib
-        nibabel object representing the binary mask enclosed in a cilinder
+        nibabel object representing the binary mask after teh shaping
 
     """
     if fill:
