@@ -1,16 +1,25 @@
 import nibabel as nib
 import numpy as np
 import matplotlib.pyplot as plt
-import os
 
 
 def image_histo(nifti_file):
+    """
+    From a nibabel (nib) image draws a grey level histogram 
+    
+    Args:
+        input_image: nib
+            image input object
+
+    Returns: 
+ 
+    """
 
     # Get the image array
-    ct_data = nifti_file.get_fdata()
+    image_array = nifti_file.get_fdata()
 
     # Shape the array as 1D
-    flat_data = ct_data.flatten()
+    flat_data = image_array.flatten()
 
     # Draw the histogram
     plt.hist(flat_data, bins=100, color='blue', edgecolor='black')
