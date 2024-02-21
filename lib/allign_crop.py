@@ -1,8 +1,8 @@
 import nibabel as nib
 from lib.align_images import align_images
-from lib.fill_holes import fill_spinal_holes
-from lib.dilate import dilate_spine
-from lib.cylinder import spine_as_cylinder
+from lib.fill_holes import fill_holes
+from lib.dilate import dilate
+from lib.cylinder import cylinder
 from lib.binarize import binarize
 
 
@@ -29,13 +29,13 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, 
     # Apply shape function on segmentation
     if shape == "fill_holes":
         print(shape)
-        mask = fill_spinal_holes(mask, f_dilations, f_dim)
+        mask = fill_holes(mask, f_dilations, f_dim)
     elif shape == "dilation":
         print(shape)
-        mask = dilate_spine(mask, d_dilations, d_filling)
+        mask = dilate(mask, d_dilations, d_filling)
     elif shape == "cylinder":
         print(shape)
-        mask = spine_as_cylinder(mask, c_dilations)
+        mask = cylinder(mask, c_dilations)
     elif shape == "original":
         print(shape)
     else:
