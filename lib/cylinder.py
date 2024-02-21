@@ -1,6 +1,6 @@
 import nibabel as nib
 import numpy as np
-from lib.dilate import dilate_spine
+from lib.dilate import dilate
 
 
 def cylinder(input_image, dilations=0):
