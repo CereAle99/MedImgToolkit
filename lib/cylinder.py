@@ -12,7 +12,8 @@ def cylinder(input_image, dilations=0):
         input_image: nib
             imput object to be shaped as a cylinder
         dilations: int
-            number of dilations to perform first to the original mask
+            number of dilations to perform first to the original mask, 
+            default is 0
 
     Returns: nib
         nibabel object representing the binary mask enclosed in a cilinder
