@@ -11,9 +11,9 @@ def align_images(input_image, reference_image):
     
     Args:
         input_image: nib
-            NIfTI file of the image to be aligned
+            imput object of the image to be aligned
         reference_image: nib
-            the NIfTI file of the image taken for reference
+            imput object of the image taken for reference
 
     Returns: 
         aligned_input: nib
@@ -23,7 +23,7 @@ def align_images(input_image, reference_image):
 
     """
 
-    # Load the nifti files header and image array
+    # Load the nibabel objects header and image array
     img_header = input_image.header
     ref_header = reference_image.header
     img_affine = input_image.affine
@@ -31,15 +31,15 @@ def align_images(input_image, reference_image):
     img_array = input_image.get_fdata()
     ref_array = reference_image.get_fdata()
 
-    # PET resize ratio
+    # input image resize ratio
     resize_ratio = img_header['pixdim'][1:4] / ref_header['pixdim'][1:4]
 
-    # PET resizing and his displacement
+    # input image resizing and his displacement
     img_array = zoom(img_array, zoom=resize_ratio, grid_mode=True, mode="grid-constant")
     rest = np.array(img_array.shape) - np.array(img_header['dim'][1:4]) * np.array(resize_ratio)
     pixel_displacement = rest / np.array(img_array.shape)
 
-    # CT image resizing
+    # reference image resizing
     ref_array_resized = np.zeros(shape=img_array.shape)
     side_x = (img_array.shape[0] - ref_array.shape[0]) // 2
     side_y = (img_array.shape[1] - ref_array.shape[1]) // 2
@@ -49,7 +49,7 @@ def align_images(input_image, reference_image):
     center_z = ref_array.shape[2]
     ref_array_resized[side_x:side_x + center_x, side_y:side_y + center_y, side_z:side_z + center_z] = ref_array
 
-    # Image axis orientations
+    # input mage axis orientations
     x_orientation = np.sign(img_header['srow_x'][0])
     y_orientation = np.sign(img_header['srow_y'][1])
     z_orientation = np.sign(img_header['srow_z'][2])
@@ -65,7 +65,7 @@ def align_images(input_image, reference_image):
                                - z_orientation * (img_header['pixdim'][3] / 2)
                                + z_orientation * (img_header['pixdim'][3] / resize_ratio[2]) / 2)
 
-    # PET header fixing
+    # input image header fixing
     img_header['dim'][1:4] = img_array.shape
     img_affine[0, 0] = x_orientation * (img_header['pixdim'][1] / resize_ratio[0] - pixel_displacement[0])
     img_affine[1, 1] = y_orientation * (img_header['pixdim'][2] / resize_ratio[1] - pixel_displacement[1])
@@ -74,7 +74,7 @@ def align_images(input_image, reference_image):
     img_affine[1, 3] = img_header['qoffset_y']
     img_affine[2, 3] = img_header['qoffset_z']
 
-    # CT header fixing
+    # reference image header fixing
     ref_header['dim'][1:4] = img_array.shape
     ref_affine[0, 0] = x_orientation * (ref_header['pixdim'][1] - pixel_displacement[0])
     ref_affine[1, 1] = y_orientation * (ref_header['pixdim'][2] - pixel_displacement[1])
@@ -83,18 +83,18 @@ def align_images(input_image, reference_image):
     ref_affine[1, 3] = ref_header['qoffset_y'] - side_y * (img_affine[1, 1])
     ref_affine[2, 3] = ref_header['qoffset_z'] - side_z * (img_affine[2, 2])
 
-    # Evaluate the offset and shift the PET image
+    # Evaluate the offset and shift the input image
     axis_directions = np.array([-x_orientation, -y_orientation, -z_orientation])
     shift_vector = (ref_affine[0:3, 3] - img_affine[0:3, 3]) / np.abs(np.diag(img_affine)[0:3]) * axis_directions
     print(shift_vector)
     img_array = shift(img_array, shift_vector, mode="constant", cval=0)
 
-    # Fix the PET offset
+    # Fix the input image offset
     img_affine[0, 3] = ref_affine[0, 3]
     img_affine[1, 3] = ref_affine[1, 3]
     img_affine[2, 3] = ref_affine[2, 3]
 
-    # CT and PET NIfTI files assembled
+    # reference image and input image ninanel objects assembled
     aligned_input = nib.Nifti1Image(img_array, img_affine, img_header)
     aligned_reference = nib.Nifti1Image(ref_array_resized, ref_affine, ref_header)
     return aligned_input, aligned_reference
