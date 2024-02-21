@@ -22,7 +22,7 @@ def cylinder(input_image, dilations=0):
 
     # if the parameter is set, perform the dilation
     if dilations != 0:
-        dilated_image = dilate_spine(input_image, dilations)
+        dilated_image = dilate(input_image, dilations)
     else:
         dilated_image = input_image
 
