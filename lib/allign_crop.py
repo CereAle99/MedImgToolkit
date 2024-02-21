@@ -6,33 +6,57 @@ from lib.cylinder import cylinder
 from lib.binarize import binarize
 
 
-def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, f_dilations=3, f_dim=3, d_dilations=3, d_filling=True, c_dilations=3):
+def crop_spine_shape(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d_iterations=3, d_filling=True, d_dilations=3, c_dilations=3):
     """
 
     Args:
-        input_nifti:
-        mask:
-        shape:
-        segmentation_value:
-        f_dilations:
-        f_dim:
-        d_dilations:
-        d_filling:
-        c_dilations:
+        input_nifti: nib
+            imput object to be shaped
+        mask: nib
+            segmentation object selecting the area to crop
+        shape: choices: {'original', 'fill_holes', 'dilation', 'cylinder'}
+            selection of the shape for the image to be cropped. Default is
+            'original'
+        label: float or int
+            label of the voxels to be part of the final mask. Default is 1
+        f_dim: int
+            dimensions of the squared/cubic structuring element in pixel.
+            It is used only if the selected shape is 'fill_holes'.
+            Default is 3.
+        f_dilations: int
+            number of iterations for the dilations before the filling 
+            operation, and of erosions after. It is used only if the selected
+            shape is 'fill_holes'. Default is 3
+        d_iterations: int
+            number of iterations for the dilation. It is used only if the
+            selected shape is 'dilation'. Default is 3
+        d_filling: bool
+            if False, only the dilation is performed. If True before the 
+            dilation a binary filling operation is performed. It is used 
+            only if the selected shape is 'dilation'. Default is True
+        d_dilations:: int
+            number of iterations for the dilations and then erosions inside
+            the filling operation. It is used only if the selected shape is
+            'dilation'. Default is 3
+        c_dilations: int
+            number of dilations to perform before the cylinder shaping to the
+            original mask. It is used only if the selected shape is 'dilation'.
+            Default is 3
 
     Returns:
 
     """
 
-    mask = binarize(mask, segmentation_value)
+    # mask binarization
+    mask = binarize(mask, label=label)
 
     # Apply shape function on segmentation
     if shape == "fill_holes":
         print(shape)
-        mask = fill_holes(mask, f_dilations, f_dim)
-    elif shape == "dilation":
+        mask = fill_holes(mask, dim=f_dim, n_dilations=f_dilations)
+    elif shape == "dilate":
         print(shape)
-        mask = dilate(mask, d_dilations, d_filling)
+        mask = dilate(mask, iterations=d_iterations, fill=d_filling, n_dilations=d_dilations)
     elif shape == "cylinder":
         print(shape)
         mask = cylinder(mask, c_dilations)
@@ -40,11 +64,9 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, 
         print(shape)
     else:
         print("Shape invalid. Going with the original shape.")
-    print("done shaping")
 
     # Make PET image and spine segmentation image compatibles
     resized_pet, resized_mask = align_images(input_nifti, mask)
-    print("done resizing")
 
     # Put the segmentation into a numpy array
     segmentation = resized_mask.get_fdata()
@@ -54,7 +76,6 @@ def crop_spine_shape(input_nifti, mask, shape="original", segmentation_value=1, 
 
     # Cut the PET image
     cut_image = image * segmentation
-    print(f"done cutting")
 
     # Save cut image in a NIfTI file
     crop_image = nib.Nifti1Image(cut_image, input_nifti.affine, input_nifti.header)
