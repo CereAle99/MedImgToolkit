@@ -73,7 +73,7 @@ def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d
         print("Shape invalid. Going with the original shape.")
 
     # Put the segmentation into a numpy array
-    segmentation = binarized_mask.get_fdata()
+    segmentation = mask.get_fdata()
 
     # Put the image into a numpy array
     image = input_nifti.get_fdata()
