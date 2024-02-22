@@ -12,7 +12,7 @@ def image_histo(nifti_file):
             image input object
 
     Returns: 
- 
+        None
     """
 
     # Get the image array
