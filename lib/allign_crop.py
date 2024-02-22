@@ -6,9 +6,14 @@ from lib.cylinder import cylinder
 from lib.binarize import binarize
 
 
-def crop_spine_shape(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d_iterations=3, d_filling=True, d_dilations=3, c_dilations=3):
+def alignment_crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d_iterations=3, d_filling=True, d_dilations=3, c_dilations=3):
     """
-
+    Takes an image and its segmentation, binarizes it for a specific label,
+    shapes the binary mask according to the "shape" parameter, aligns image
+    and mask, and performs the multiplication between the image and the mask
+    to keep just the image values inside the segmentation area, while all
+    the others are set to zero.
+    
     Args:
         input_nifti: nib
             imput object to be shaped
@@ -44,7 +49,11 @@ def crop_spine_shape(input_nifti, mask, shape="original", label=1, f_dim=3, f_di
             Default is 3
 
     Returns:
-
+        crop_image: nib
+            input image resized and shaped conserving just the information 
+            in the area defined by the binary mask
+        segm_aligned:
+            binary mask resized and shaped
     """
 
     # mask binarization
