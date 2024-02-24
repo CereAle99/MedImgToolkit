@@ -59,16 +59,16 @@ def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d
 
     # Apply shape function on segmentation
     if shape == "fill_holes":
-        print(shape)
+        print("Shaping binary image with shape: ",shape)
         mask = fill_holes(mask, dim=f_dim, n_dilations=f_dilations)
     elif shape == "dilate":
-        print(shape)
+        print("Shaping binary image with shape: ", shape)
         mask = dilate(mask, iterations=d_iterations, fill=d_filling, n_dilations=d_dilations)
     elif shape == "cylinder":
-        print(shape)
+        print("Shaping binary image with shape: ",shape)
         mask = cylinder(mask, c_dilations)
     elif shape == "original":
-        print(shape)
+        print("Shaping binary image with shape: ",shape)
     else:
         print("Shape invalid. Going with the original shape.")
 
@@ -79,11 +79,12 @@ def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d
     image = input_nifti.get_fdata()
 
     # Cut the PET image
+    print("Cutting...")
     cut_image = image * segmentation
-    print(f"done cutting")
 
     # Save cut image in a NIfTI file
     crop_image = nib.Nifti1Image(cut_image, input_nifti.affine, input_nifti.header)
     segm = nib.Nifti1Image(segmentation, input_nifti.affine, input_nifti.header)
+    print("... Done")
 
     return crop_image, segm
