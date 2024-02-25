@@ -44,3 +44,18 @@ def test_align_images_returns_nifti1image(sample_medical_image, sample_singlelab
     assert image_array.shape == mask_array.shape
 
 
+def test_align_images_same_offset(sample_medical_image, sample_singlelabel_segmentation):
+    """
+    Tests:
+    If the two outputs have the same header's offsets
+    If the two outputs have the same pixdim
+    """
+
+    image, mask = align_images(sample_medical_image, sample_singlelabel_segmentation)
+    image_header = image.header
+    mask_header = mask.header
+
+    assert image_header['qoffset_x'] == mask_header['qoffset_x']
+    assert image_header['qoffset_y'] == mask_header['qoffset_y']
+    assert image_header['qoffset_z'] == mask_header['qoffset_z']
+    assert image_header['pixdim'][1:3] == mask_header['pixdim'][1:3]
