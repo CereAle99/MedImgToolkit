@@ -75,9 +75,25 @@ def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
     """
     Tests:
     If the dim parameter is higher the mask is equal or more filled
+    If giving 0 as structuring element raises an error
+    """
+
+    fill_holes_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
+    fill_hole_dim_7 = fill_holes(sample_singlelabel_segmentation, dim=7).get_fdata()
+
+    with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
+        fill_holes(sample_singlelabel_segmentation, dim=0)
+    assert np.all(np.logical_or(np.equal(fill_hole_dim_7, fill_holes_dim_3), fill_hole_dim_7))
+
+
+
+def test_fill_holes_dilation_param_limits(sample_singlelabel_segmentation):
+    """
+    Tests:
+    If the dim parameter is higher the mask is equal or more filled
     """
     
-    fill_holes_mask = fill_holes(sample_singlelabel_segmentation, 3).get_fdata()
-    fill_hole_mask_higher_dim = fill_holes(sample_singlelabel_segmentation, 5).get_fdata()
+    fill_holes_mask = fill_holes(sample_singlelabel_segmentation).get_fdata()
+    fill_hole_mask_dilation = fill_holes(sample_singlelabel_segmentation, n_dilations=3).get_fdata()
 
-    assert np.all(np.logical_or(np.equal(fill_hole_mask_higher_dim, fill_holes_mask), fill_hole_mask_higher_dim))
+    assert np.all(np.logical_or(np.equal(fill_hole_mask_dilation, fill_holes_mask), fill_hole_mask_dilation))
