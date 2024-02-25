@@ -40,7 +40,7 @@ def test_align_images_returns_nifti1image(sample_medical_image, sample_singlelab
 
     assert isinstance(image, nib.Nifti1Image)
     assert isinstance(mask, nib.Nifti1Image)
-    assert mask_array.get_data_dtype() == np.uint8
+    assert mask.get_data_dtype() == np.uint8
     assert image_array.shape == mask_array.shape
 
 
