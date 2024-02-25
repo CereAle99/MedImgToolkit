@@ -49,7 +49,7 @@ def test_binarize_single_label(sample_singlelabel_segmentation):
     Tests:
     If the output of a single-label mask is binary
     """
-    binarized_image = binarize(sample_singlelabel_segmentation, 15)
+    binarized_image = binarize(sample_singlelabel_segmentation, 1)
 
     assert binarized_image.get_data_dtype() == np.uint8
 
