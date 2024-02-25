@@ -1,7 +1,20 @@
 import nibabel as nib
-from lib.allign_crop import align_images
+
+
+import numpy as np
 import os
 import pytest
+
+
+import os,sys,inspect
+currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+parentdir = os.path.dirname(currentdir)
+sys.path.insert(0,parentdir) 
+
+
+from lib.allign_crop import alignment_crop
+
+
 
 @pytest.fixture
 def sample_multilabel_segmentation(tmp_path):
