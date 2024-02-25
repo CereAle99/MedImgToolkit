@@ -40,6 +40,9 @@ def dilate(imput_image, iterations=1, fill=False, dim=3, n_dilations=None):
     # Verifies the image is not empty
     if image.size == 0 or np.all(image == 0):
         raise ValueError("Input file is empty")
+    
+    if iterations == 0:
+        raise ValueError("Dim 0 for the structuring element")
 
     # Dilate the mask
     final_image = ndimage.binary_dilation(image, iterations=iterations)
