@@ -40,10 +40,11 @@ def fill_holes(input_nifti, dim=3, n_dilations=None):
     # building the structuring element
     if dim == 0:
         raise ValueError("Dim 0 for the structuring element")
-    kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
-    kernel[:, dim // 2, :] = 1
+    else:
+        kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
+        kernel[:, dim // 2, :] = 1
 
-
+    
     # filling operations, with dilation and erosion if n_dilations is set
     if n_dilations is None:
         final_image = ndimage.binary_fill_holes(image, structure=kernel).astype(int)
