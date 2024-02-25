@@ -21,16 +21,16 @@ def sample_singlelabel_segmentation():
     return nib.load(sample_file_path)
 
 
-def test_cylinder_returns_nifti1image(sample_multilabel_segmentation):
+def test_cylinder_returns_nifti1image(sample_singlelabel_segmentation):
     """
     Tests:
     If the output is a NiftiImage instance
     If the input image has the same resolution of the output image
     If the datatype of the output image is binary
     """
-    result = cylinder(sample_multilabel_segmentation)
+    result = cylinder(sample_singlelabel_segmentation)
     result_array = result.get_fdata()
-    sample_array = sample_multilabel_segmentation.get_fdata()
+    sample_array = sample_singlelabel_segmentation.get_fdata()
 
     assert isinstance(result, nib.Nifti1Image)
     assert result_array.shape == sample_array.shape
