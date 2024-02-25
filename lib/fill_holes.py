@@ -38,6 +38,8 @@ def fill_holes(input_nifti, dim=3, n_dilations=None):
         raise ValueError("Input file is empty")
 
     # building the structuring element
+    if dim == 0:
+        raise ValueError("Dim 0 for the structuring element")
     kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
     kernel[:, dim // 2, :] = 1
 
