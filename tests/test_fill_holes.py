@@ -1,7 +1,6 @@
 import nibabel as nib
-
-
 import numpy as np
+import scipy as sp
 import os
 import pytest
 
@@ -74,16 +73,21 @@ def test_fill_holes_output_differs_from_input(sample_singlelabel_segmentation):
 def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
     """
     Tests:
-    If the dim parameter is higher the mask is equal or more filled
     If giving 0 as structuring element raises an error
+    If with a higher dim parameter the holes results equal or smaller 
+    If with a higher dim parameter the holes are fewer
     """
 
     fill_holes_dim_1 = fill_holes(sample_singlelabel_segmentation, dim=1).get_fdata()
     fill_hole_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
 
+    number_holes, contiguous_holes = sp.ndimage.measurements.label(fill_holes_dim_1)
+    number_holes_dim3, contiguous_holes_dim3 = sp.ndimage.measurements.label(fill_hole_dim_3)
+
     with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
         fill_holes(sample_singlelabel_segmentation, dim=0)
-    assert np.all(np.logical_or(np.equal(fill_hole_dim_3, fill_holes_dim_1), fill_hole_dim_3))
+    assert np.sum(contiguous_holes_dim3) <= np.sum(contiguous_holes)
+    assert number_holes_dim3 < number_holes
 
 
 
