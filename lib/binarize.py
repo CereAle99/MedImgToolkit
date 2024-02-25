@@ -24,7 +24,7 @@ def binarize(input_image, label=1):
 
     # Verifies the image is not empty
     if array.size == 0 or np.all(array == 0):
-        raise ValueError("Image is empty")
+        raise ValueError("Input file is empty")
 
     # Binarize the image for the label value
     if label == 1:
