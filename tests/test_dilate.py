@@ -95,4 +95,4 @@ def test_dilate_segmentation_is_bigger(sample_singlelabel_segmentation):
     dilate_mask = dilate(sample_singlelabel_segmentation).get_fdata()
     input_mask = sample_singlelabel_segmentation.get_fdata()
 
-    assert np.sum(dilate_mask, axis=(0,1)) > np.sum(input_mask, axis=(0,1))
+    assert np.sum(dilate_mask, axis=(0,1,2)) > np.sum(input_mask, axis=(0,1,2))

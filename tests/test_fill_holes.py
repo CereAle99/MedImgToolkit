@@ -86,7 +86,7 @@ def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
 
     with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
         fill_holes(sample_singlelabel_segmentation, dim=0)
-    assert np.sum(contiguous_holes_dim3, axis=(0,1)) <= np.sum(contiguous_holes, axis=(0,1))
+    assert np.sum(contiguous_holes_dim3, axis=(0,1,2)) <= np.sum(contiguous_holes, axis=(0,1,2))
     assert number_holes_dim3 < number_holes
 
 
