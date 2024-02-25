@@ -86,7 +86,7 @@ def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
     assert np.all(np.logical_or(np.equal(dilate_dim_2, dilate_dim_1), dilate_dim_2))
 
 
-def test_dilate_segmentation_is_bigger():
+def test_dilate_segmentation_is_bigger(sample_singlelabel_segmentation):
     """
     Tests:
     If the lebels are more in the output image than the input
