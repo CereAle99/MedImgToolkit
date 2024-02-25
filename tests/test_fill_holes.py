@@ -81,11 +81,8 @@ def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
     fill_holes_dim_1 = fill_holes(sample_singlelabel_segmentation, dim=1).get_fdata()
     fill_hole_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
 
-    kernel = np.zeros((5, 5, 5), dtype=np.uint8)
-    kernel[:, 5 // 2, :] = 1
-
-    contiguous_holes, number_holes = sp.ndimage.label(fill_holes_dim_1, structure=kernel)
-    contiguous_holes_dim3, number_holes_dim3 = sp.ndimage.label(fill_hole_dim_3, structure=kernel)
+    contiguous_holes, number_holes = sp.ndimage.label(fill_holes_dim_1)
+    contiguous_holes_dim3, number_holes_dim3 = sp.ndimage.label(fill_hole_dim_3)
 
     with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
         fill_holes(sample_singlelabel_segmentation, dim=0)
