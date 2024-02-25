@@ -49,6 +49,17 @@ def test_cylinder_empty_input():
         cylinder(empty_image)
 
 
+def test_cylinder_output_differs_from_input(sample_singlelabel_segmentation):
+    """
+    Tests:
+    If input and output are different
+    """
+    input_image = sample_singlelabel_segmentation.get_fdata()
+    output_image = cylinder(sample_singlelabel_segmentation)
+    
+    assert not np.array_equal(input_image, output_image)
+
+
 def test_cylinder_encloses_mask(sample_singlelabel_segmentation):
     """
     Tests:
