@@ -29,6 +29,10 @@ def cylinder(input_image, dilations=0):
     # load the image array
     image = dilated_image.get_fdata()
 
+    # Verifies the image is not empty
+    if image.size == 0 or np.all(image == 0):
+        raise ValueError("Input file is empty")
+
     # evaluate the spatial ranges of the mask
     [i_max, i_min, j_max, j_min, k_max, k_min] = [0, 999, 0, 999, 0, 999]
     for i in range(image.shape[0]):

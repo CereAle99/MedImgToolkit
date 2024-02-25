@@ -33,6 +33,10 @@ def fill_holes(input_nifti, dim=3, n_dilations=None):
     # load the image array
     image = input_nifti.get_fdata()
 
+    # Verifies the image is not empty
+    if image.size == 0 or np.all(image == 0):
+        raise ValueError("Input file is empty")
+
     # building the structuring element
     kernel = np.zeros((dim, dim, dim), dtype=np.uint8)
     kernel[:, dim // 2, :] = 1

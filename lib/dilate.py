@@ -1,6 +1,7 @@
 import nibabel as nib
 from scipy import ndimage
 from lib.fill_holes import fill_holes
+import numpy as np
 
 
 def dilate(imput_image, iterations=1, fill=False, dim=3, n_dilations=None):
@@ -35,6 +36,12 @@ def dilate(imput_image, iterations=1, fill=False, dim=3, n_dilations=None):
         fill_nifti = imput_image
 
     image = fill_nifti.get_fdata()
+
+    # Verifies the image is not empty
+    if image.size == 0 or np.all(image == 0):
+        raise ValueError("Input file is empty")
+
+    # Dilate the mask
     final_image = ndimage.binary_dilation(image, iterations=iterations)
 
     # Put the image in a NIfTI file
