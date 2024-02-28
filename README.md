@@ -1,6 +1,7 @@
-# Medical images aligment and shaping
+# NiftiImageAlign&Manage
+## Medical NIfTI images aligment and shaping library
 
-Short description or tagline for your project.
+This library provides useful functions for handling NIfTI medical images alongside with their segmentation. It can perform segmentation shaping with 4 categories of shaping 
 
 ## Introduction
 
@@ -20,3 +21,6 @@ numpy>=1.16
 scipy>=1.2
 nibabel>=3.2
 # Add more dependencies as needed
+```
+
+ciao
