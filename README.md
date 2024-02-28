@@ -5,6 +5,7 @@
 * [Introduction](#introduction)
 * [Features](#features)
 * [Requirements](#requirements)
+* [Installation](#installation)
 
 ## Overview
 
@@ -56,11 +57,24 @@ List key features and functionalities of your functions library.
 Specify the requirements and dependencies needed to run the code. Include any specific libraries or tools that users must have installed.
 
 ```bash
-# Example requirements.txt file
-numpy>=1.16
-scipy>=1.2
-nibabel>=3.2
-# Add more dependencies as needed
+python>=3.12.1
+# Already in the requirements.txt file
+numpy>=1.26.4
+nibabel>=5.2.0
+scipy>=1.12.0
+pytest>=8.0.2
+hypothesis>=6.98.13
 ```
 
-ciao
+## Installation
+```bash
+# Clone the repository
+git clone https://github.com/CereAle99/medical_images_alignment.git
+
+# Change into the project directory
+cd your-repository
+
+# Install dependencies
+pip install -r requirements.txt
+```
+
