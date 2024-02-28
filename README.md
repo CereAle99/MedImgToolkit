@@ -3,9 +3,9 @@
 
 * [Overview](#overview)
 * [Introduction](#introduction)
-* [Features](#features)
 * [Requirements](#requirements)
 * [Installation](#installation)
+* [Contributing](#contributing)
 
 ## Overview
 
@@ -48,10 +48,6 @@ Welcome to MedImgToolkit, a powerful Python library for processing and manipulat
 
 Explore the documentation and example use cases to unlock the full potential of MedImgToolkit in your medical image processing workflows.
 
-## Features
-
-List key features and functionalities of your functions library.
-
 ## Requirements
 
 Specify the requirements and dependencies needed to run the code. Include any specific libraries or tools that users must have installed.
@@ -78,3 +74,14 @@ cd your-repository
 pip install -r requirements.txt
 ```
 
+## Contributing
+We welcome contributions to MedImgToolkit! Please follow these guidelines to contribute:
+
+1.   Fork the repository and create your branch from main.
+2.   Make your changes and ensure the code follows the project's style guide.
+3.   write tests for any new functionality and ensure all tests pass.
+4.   Submit a pull request, providing a clear description of your changes.
+
+Thank you for your valuable contributions and support!
+
+Feel free to customize the names, links, and content based on your project and contributors.
