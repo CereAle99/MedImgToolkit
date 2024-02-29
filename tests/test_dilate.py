@@ -16,7 +16,7 @@ from lib.dilate import dilate
 
 @pytest.fixture
 def sample_singlelabel_segmentation():
-    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii')
+    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii.gz')
     return nib.load(sample_file_path)
 
 

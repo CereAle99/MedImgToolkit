@@ -18,11 +18,11 @@ from lib.crop import crop
 
 @pytest.fixture
 def sample_multilabel_segmentation(tmp_path):
-    sample_file_path = os.path.join('data', 'segmentation.nii')
+    sample_file_path = os.path.join('data', 'segmentation.nii.gz.gz')
     return nib.load(sample_file_path)
 
 
 @pytest.fixture
 def sample_medical_image(tmp_path):
-    sample_file_path = os.path.join('data', 'CT.nii')
+    sample_file_path = os.path.join('data', 'CT.nii.gz')
     return nib.load(sample_file_path)

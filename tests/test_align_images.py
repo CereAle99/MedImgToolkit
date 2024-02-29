@@ -17,13 +17,13 @@ from lib.align_images import align_images
 
 @pytest.fixture
 def sample_medical_image(tmp_path):
-    sample_file_path = os.path.join('data', 'PT.nii')
+    sample_file_path = os.path.join('data', 'PT.nii.gz')
     return nib.load(sample_file_path)
 
 
 @pytest.fixture
 def sample_singlelabel_segmentation():
-    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii')
+    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii.gz')
     return nib.load(sample_file_path)
 
 

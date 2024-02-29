@@ -18,13 +18,13 @@ from lib.binarize import binarize
 
 @pytest.fixture
 def sample_singlelabel_segmentation():
-    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii')
+    sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii.gz')
     return nib.load(sample_file_path)
 
 
 @pytest.fixture
 def sample_multilabel_segmentation():
-    sample_file_path = os.path.join('data', 'segmentation.nii')
+    sample_file_path = os.path.join('data', 'segmentation.nii.gz')
     return nib.load(sample_file_path)
 
 
