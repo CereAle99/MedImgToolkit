@@ -58,4 +58,6 @@ def test_align_images_same_offset(sample_medical_image, sample_singlelabel_segme
     assert image_header['qoffset_x'] == mask_header['qoffset_x']
     assert image_header['qoffset_y'] == mask_header['qoffset_y']
     assert image_header['qoffset_z'] == mask_header['qoffset_z']
-    assert image_header['pixdim'][1:3] == mask_header['pixdim'][1:3]
+    assert image_header['pixdim'][1] == mask_header['pixdim'][1]
+    assert image_header['pixdim'][2] == mask_header['pixdim'][2]
+    assert image_header['pixdim'][3] == mask_header['pixdim'][3]
