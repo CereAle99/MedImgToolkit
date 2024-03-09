@@ -29,13 +29,14 @@ def sample_medical_image(tmp_path):
 
 
 
-def test_crop_empty_input():
+def test_crop_invalid_shape(sample_medical_image, sample_multilabel_segmentation):
     """
-    Tests:
-    If the function gets an empty input
-    """
+    Gets as input an image and a multilabel segmentation, and the invalid 
+    shape "wrong" is passed.
 
-    empty_image = nib.Nifti1Image(np.zeros((10, 10, 10)), np.eye(4))
+    Tests:
+    If the function gets an invalid shape, and raises an error.
+    """
 
     with pytest.raises(ValueError, match="Shape invalid."):
-        crop(empty_image, empty_image, 'invalid shape')
+        crop(sample_medical_image, sample_multilabel_segmentation, 'wrong')
