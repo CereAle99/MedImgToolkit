@@ -27,8 +27,10 @@ def binarize(input_image, label=1):
         raise ValueError("Input file is empty")
 
     # Binarize the image for the label value
-    if label == 1:
-        pass
+    if label == 0:
+        array[array != label] = 10
+        array[array == label] = 1
+        array[array == 10] = 0
     elif label:
         array[array != label] = 0
         array[array == label] = 1
