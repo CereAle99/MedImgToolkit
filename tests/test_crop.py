@@ -26,3 +26,16 @@ def sample_multilabel_segmentation(tmp_path):
 def sample_medical_image(tmp_path):
     sample_file_path = os.path.join('data', 'CT.nii.gz')
     return nib.load(sample_file_path)
+
+
+
+def test_crop_empty_input():
+    """
+    Tests:
+    If the function gets an empty input
+    """
+
+    empty_image = nib.Nifti1Image(np.zeros((10, 10, 10)), np.eye(4))
+
+    with pytest.raises(ValueError, match="Shape invalid."):
+        crop(empty_image, empty_image, 'invalid shape')
