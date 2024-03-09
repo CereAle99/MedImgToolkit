@@ -28,6 +28,35 @@ def sample_multilabel_segmentation():
     return nib.load(sample_file_path)
 
 
+@pytest.fixture
+def sample_image_multi_012():
+    """
+    Create a 3x3x3 cube with with labels 0, 1, and 2.
+    Put it in a NiftiImage instance
+    """
+    data = np.zeros((3, 3, 3), dtype=np.uint8)
+    data[1,:,:] = 1
+    data[2,:,:] = 2
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+
+@pytest.fixture
+def sample_image_multi_100():
+    """
+    Create a 3x3x3 cube with with labels 0, 1, and 2.
+    Put it in a NiftiImage instance
+    """
+    data = np.zeros((3, 3, 3), dtype=np.uint8)
+    data[0,:,:] = 1
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+
 def test_binarize_returns_nifti1image(sample_multilabel_segmentation):
     """
     Tests:
@@ -78,3 +107,17 @@ def test_binarize_no_labels_match(sample_singlelabel_segmentation):
 
     # Assert that 
     assert np.all(binary_mask == 0)
+
+
+def test_binarize_label_zero(sample_image_multi_012, sample_image_multi_100):
+    """
+    Binarize function gets as input a multilabel segmentation and a label=0
+
+    Tests:
+    If the output segmentation has 0s where befor it had other labels and 
+    1s where it had 0s.
+    """
+
+    binarized_image = binarize(sample_image_multi_012, 0)
+
+    assert np.all(binarized_image.get_fdata() == sample_image_multi_100.get_fdata())
