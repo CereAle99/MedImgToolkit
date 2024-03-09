@@ -24,7 +24,7 @@ def sample_singlelabel_segmentation():
 def sample_image_center_pixel():
     """
     Create a 5x5x5 cube with a center made of 1s with borders made of 0s
-    Put it in a NIfTI image
+    Put it in a NIfTI image.
     """
     data = np.zeros((5, 5, 5), dtype=np.uint8)
     data[2, 2, 2] = 1 
@@ -37,11 +37,19 @@ def sample_image_center_pixel():
 @pytest.fixture
 def sample_image_center_big_cross():
     """
-    Create a 9x9x9 cube with a center made of 1s with borders made of 0s
-    Put it in a NIfTI image
+    Create a 9x9x9 cube with a Central cubic core with removed 
+    corners and diagonal and vertical bars. Put it in a NIfTI image.
     """
     data = np.zeros((5, 5, 5), dtype=int)
     data[1:4, 1:4, 1:4] = 1
+    data[1, 1, 1] = 0
+    data[1, 1, 3] = 0
+    data[1, 3, 1] = 0
+    data[1, 3, 3] = 0
+    data[3, 1, 1] = 0
+    data[3, 1, 3] = 0
+    data[3, 3, 1] = 0
+    data[3, 3, 3] = 0
     data[2, 2, 0] = 1
     data[0, 2, 2] = 1
     data[2, 0, 2] = 1
@@ -59,16 +67,16 @@ def sample_image_center_big_cross():
 def sample_image_center_cross():
     """
     Create a 9x9x9 cube with a center made of 1s with borders made of 0s
-    Put it in a NIfTI image
+    Put it in a NIfTI image.
     """
     data = np.zeros((5, 5, 5), dtype=int)
-    data[2, 2, 2] = 1
-    data[2, 2, 1] = 1
-    data[2, 2, 3] = 1
-    data[2, 1, 2] = 1
-    data[2, 3, 2] = 1
-    data[1, 2, 2] = 1
-    data[3, 2, 2] = 1
+    data[2, 2, 2] = 1.
+    data[2, 2, 1] = 1.
+    data[2, 2, 3] = 1.
+    data[2, 1, 2] = 1.
+    data[2, 3, 2] = 1.
+    data[1, 2, 2] = 1.
+    data[3, 2, 2] = 1.
 
     nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
 
@@ -151,11 +159,11 @@ def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
 def test_dilate_segmentation_is_bigger(sample_singlelabel_segmentation):
     """
     Tests:
-    If the lebels are more in the output image than the input
+    If there are more labels in the output image than in the input
     """
 
-    dilate_mask = dilate(sample_singlelabel_segmentation).get_fdata()
     input_mask = sample_singlelabel_segmentation.get_fdata()
+    dilate_mask = dilate(sample_singlelabel_segmentation, iterations=2).get_fdata()
 
     assert np.sum(dilate_mask, axis=(0,1,2)) > np.sum(input_mask, axis=(0,1,2))
 
@@ -167,7 +175,7 @@ def test_dilate_dilating_pixel(sample_image_center_pixel, sample_image_center_cr
 
     Tests:
     If the output of the dilation is an identical image with a 3x3x3
-    centered cross
+    centered cross.
     """
 
     dilate_mask = dilate(sample_image_center_pixel).get_fdata()
@@ -176,17 +184,17 @@ def test_dilate_dilating_pixel(sample_image_center_pixel, sample_image_center_cr
     assert np.all(dilate_mask == cross_mask)
 
 
-def test_dilate_dilating_pixel(sample_image_center_pixel, sample_image_center_cross):
+def test_dilate_dilating_pixel_2(sample_image_center_pixel, sample_image_center_big_cross):
     """
     The dilate function get as input a 5x5x5 nibabel image with just a 
     certral pixel.
 
     Tests:
-    If the output of the dilation is an identical image with a 5x5x5
-    centered cross with a 3x3x3 center cube
+    If the output of the dilation is an identical image with a 5x5x5 
+    central cubic core with removed corners and diagonal and vertical bars.
     """
 
     dilate_mask = dilate(sample_image_center_pixel, iterations=2).get_fdata()
-    cross_mask = sample_image_center_cross.get_fdata()
+    cross_mask = sample_image_center_big_cross.get_fdata()
 
     assert np.all(dilate_mask == cross_mask)
