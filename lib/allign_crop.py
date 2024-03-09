@@ -72,7 +72,7 @@ def alignment_crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dila
     elif shape == "original":
         print("Shaping binary image with shape: ",shape)
     else:
-        print("Shape invalid. Going with the original shape.")
+        raise ValueError("Shape invalid.")
 
     # Make PET image and spine segmentation image compatibles
     print("Aligning image and semgentation...")
