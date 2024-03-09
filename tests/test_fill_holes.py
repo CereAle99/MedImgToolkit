@@ -74,19 +74,39 @@ def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
     """
     Tests:
     If giving 0 as structuring element raises an error
+    """
+
+    with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
+        fill_holes(sample_singlelabel_segmentation, dim=0)
+
+
+def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
+    """
+    Tests:
     If with a higher dim parameter the holes results equal or smaller 
+    """
+
+    fill_holes_dim_1 = fill_holes(sample_singlelabel_segmentation, dim=1).get_fdata()
+    fill_hole_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
+
+    contiguous_holes, _ = sp.ndimage.label(fill_holes_dim_1)
+    contiguous_holes_dim3, _ = sp.ndimage.label(fill_hole_dim_3)
+
+    assert np.sum(contiguous_holes_dim3, axis=(0,1,2)) <= np.sum(contiguous_holes, axis=(0,1,2))
+
+
+def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
+    """
+    Tests:
     If with a higher dim parameter the holes are fewer
     """
 
     fill_holes_dim_1 = fill_holes(sample_singlelabel_segmentation, dim=1).get_fdata()
     fill_hole_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
 
-    contiguous_holes, number_holes = sp.ndimage.label(fill_holes_dim_1)
-    contiguous_holes_dim3, number_holes_dim3 = sp.ndimage.label(fill_hole_dim_3)
+    _, number_holes = sp.ndimage.label(fill_holes_dim_1)
+    _, number_holes_dim3 = sp.ndimage.label(fill_hole_dim_3)
 
-    with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
-        fill_holes(sample_singlelabel_segmentation, dim=0)
-    assert np.sum(contiguous_holes_dim3, axis=(0,1,2)) <= np.sum(contiguous_holes, axis=(0,1,2))
     assert number_holes_dim3 <= number_holes
 
 
