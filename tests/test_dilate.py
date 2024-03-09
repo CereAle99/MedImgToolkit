@@ -123,7 +123,7 @@ def test_dilate_output_differs_from_input(sample_singlelabel_segmentation):
     input_image = sample_singlelabel_segmentation.get_fdata()
     output_image = dilate(sample_singlelabel_segmentation)
     
-    assert not np.data_equal(input_image, output_image)
+    assert not np.array_equal(input_image, output_image)
 
 
 def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
