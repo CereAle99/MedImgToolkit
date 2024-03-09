@@ -74,15 +74,22 @@ def test_dilate_output_differs_from_input(sample_singlelabel_segmentation):
 def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
     """
     Tests:
-    If the output for a higher interation parameter encloses the one with a lower one
     If giving 0 as structuring element raises an error
+    """
+
+    with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
+        dilate(sample_singlelabel_segmentation, iterations=0)
+
+
+def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
+    """
+    Tests:
+    If the output for a higher interation parameter encloses the one with a lower one
     """
 
     dilate_dim_1 = dilate(sample_singlelabel_segmentation, iterations=1).get_fdata()
     dilate_dim_2 = dilate(sample_singlelabel_segmentation, iterations=2).get_fdata()
 
-    with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
-        dilate(sample_singlelabel_segmentation, iterations=0)
     assert np.all(np.logical_or(np.equal(dilate_dim_2, dilate_dim_1), dilate_dim_2))
 
 
