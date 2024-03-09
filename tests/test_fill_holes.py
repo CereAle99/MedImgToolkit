@@ -59,7 +59,7 @@ def sample_image_with_hole_9():
     data[1:8, 1:8, 1:8] = 1 
     data[2:7, 2:7, 2:7] = 0
 
-    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(8))
 
     return nifti_image
 
@@ -72,7 +72,7 @@ def sample_image_without_hole_9():
     data = np.zeros((9, 9, 9), dtype=np.uint8)
     data[1:8, 1:8, 1:8] = 1 
 
-    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(9))
 
     return nifti_image
 
