@@ -17,13 +17,20 @@ from lib.crop import crop
 
 
 @pytest.fixture
-def sample_multilabel_segmentation(tmp_path):
-    sample_file_path = os.path.join('data', 'segmentation.nii.gz.gz')
+def sample_multilabel_segmentation():
+    """
+    Load a nib segmentation with multiple label numbers.
+    """
+    sample_file_path = os.path.join('data', 'segmentation.nii.gz')
     return nib.load(sample_file_path)
 
 
+
 @pytest.fixture
-def sample_medical_image(tmp_path):
+def sample_medical_image():
+    """
+    Load a nib image representing a CT image.
+    """
     sample_file_path = os.path.join('data', 'CT.nii.gz')
     return nib.load(sample_file_path)
 
