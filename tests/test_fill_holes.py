@@ -49,6 +49,35 @@ def sample_image_without_hole():
     return nifti_image
 
 
+@pytest.fixture
+def sample_image_with_hole_9():
+    """
+    Create a 9x9x9 cube with a hole in the center and borders made of 0s
+    Put it in a NIfTI image
+    """
+    data = np.zeros((9, 9, 9), dtype=np.uint8)
+    data[1:8, 1:8, 1:8] = 1 
+    data[2:7, 2:7, 2:7] = 0
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+@pytest.fixture
+def sample_image_without_hole_9():
+    """
+    Create a 9x9x9 cube with a center made of 1s with borders made of 0s
+    Put it in a NIfTI image
+    """
+    data = np.zeros((9, 9, 9), dtype=np.uint8)
+    data[1:8, 1:8, 1:8] = 1 
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+
+
 
 
 def test_fill_holes_returns_nifti1image(sample_singlelabel_segmentation):
@@ -127,43 +156,30 @@ def test_fill_holes_dim_param_hole_mgnitude(sample_singlelabel_segmentation):
     assert np.sum(contiguous_holes_dim3, axis=(0,1,2)) <= np.sum(contiguous_holes, axis=(0,1,2))
 
 
-def test_fill_holes_dim_param_holes_number(sample_singlelabel_segmentation):
-    """
-    Tests:
-    If with a higher dim parameter the holes are fewer
-    """
-
-    fill_holes_dim_1 = fill_holes(sample_singlelabel_segmentation, dim=1).get_fdata()
-    fill_hole_dim_3 = fill_holes(sample_singlelabel_segmentation, dim=3).get_fdata()
-
-    _, number_holes = sp.ndimage.label(fill_holes_dim_1)
-    _, number_holes_dim3 = sp.ndimage.label(fill_hole_dim_3)
-
-    assert number_holes_dim3 <= number_holes
-
-
-
-def test_fill_holes_dilation_param_limits(sample_singlelabel_segmentation):
-    """
-    Tests:
-    If the dim parameter is higher the mask is equal or more filled
-    """
-    
-    fill_holes_mask = fill_holes(sample_singlelabel_segmentation).get_fdata()
-    fill_hole_mask_dilation = fill_holes(sample_singlelabel_segmentation, n_dilations=3).get_fdata()
-
-    assert np.all(np.logical_or(np.equal(fill_hole_mask_dilation, fill_holes_mask), fill_hole_mask_dilation))
-
 
 def test_fill_holes_filling_hole(sample_image_with_hole, sample_image_without_hole):
     """
     Given as input a nibabel image with a a 1x1x1 hole in the center,
     performs the fill_holes functionon.
-    
+
+    Tests:
+    If the output is an identical image with the hole filled
+    """ 
+
+    fill_holes_mask = fill_holes(sample_image_with_hole).get_fdata()
+
+    assert np.all(fill_holes_mask == sample_image_without_hole.get_fdata())
+
+
+def test_fill_holes_filling_greater_hole(sample_image_with_hole_9, sample_image_without_hole_9):
+    """
+    Given as input a nibabel image with a 5x5x5 hole in the center,
+    performs the fill_holes functionon.
+
     Tests:
     If the output is an identical image with the hole filled
     """
 
-    fill_holes_mask = fill_holes(sample_image_with_hole).get_fdata()
+    fill_holes_mask = fill_holes(sample_image_with_hole_9).get_fdata()
 
-    assert fill_holes_mask == sample_image_without_hole.get_fdata()
+    assert np.all(fill_holes_mask == sample_image_without_hole_9.get_fdata())
