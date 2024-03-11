@@ -66,10 +66,11 @@ def sample_image_center_cylinder():
 
     """
     data = np.zeros((5, 5, 5), dtype=int)
-    data[2, 1, 1:3] = 1
-    data[1, 2, 1:3] = 1
-    data[2, 3, 1:3] = 1
-    data[3, 2, 1:3] = 1
+    data[2, 1, 1:4] = 1
+    data[1, 2, 1:4] = 1
+    data[2, 2, 1:4] = 1
+    data[2, 3, 1:4] = 1
+    data[3, 2, 1:4] = 1
 
 
     nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
