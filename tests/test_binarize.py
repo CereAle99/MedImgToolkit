@@ -67,9 +67,9 @@ def test_binarize_returns_nifti1image(sample_multilabel_segmentation):
     Giving to the binarize function a NiftiImage instance
 
     tests:
-    If the output is a NiftiImage instance
-    If the input image has the same resolution of the output image
-    If the datatype of the output image is made of np.unit8 numbers
+    - If the output is a NiftiImage instance
+    - If the input image has the same resolution of the output image
+    - If the datatype of the output image is made of np.unit8 numbers
     """
     result = binarize(sample_multilabel_segmentation)
     result_array = result.get_fdata()
@@ -85,7 +85,7 @@ def test_binarize_single_label(sample_singlelabel_segmentation):
     Giving a single label segmentation to the binarize function 
 
     tests:
-    If the datatype of the output image is made of np.unit8 numbers
+    - If the datatype of the output image is made of np.unit8 numbers
     """
     binarized_image = binarize(sample_singlelabel_segmentation, 1)
 
@@ -98,7 +98,7 @@ def test_binarize_empty_input():
     Giving an empty segmentation to the binarize function 
 
     tests:
-    If the function raises a ValueError with the message
+    - If the function raises a ValueError with the message
     "Input file is empty."
     """
 
@@ -115,7 +115,7 @@ def test_binarize_no_labels_match(sample_multilabel_segmentation):
     the labels of the input image
 
     tests:
-    If the output image is empty 
+    - If the output image is empty 
     """
     non_existing_label = 90
     binarized_image = binarize(sample_multilabel_segmentation, non_existing_label)
@@ -130,7 +130,7 @@ def test_binarize_label_zero(sample_image_multi_012, sample_image_multi_100):
     Giving a multi-label segmentation and specifying as input a label of 0
 
     tests:
-    If the output segmentation has 0s where befor it had other labels and 
+    - If the output segmentation has 0s where befor it had other labels and 
     1s where it had 0s
     """
 
