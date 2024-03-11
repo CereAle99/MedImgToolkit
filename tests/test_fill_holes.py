@@ -151,10 +151,10 @@ def test_fill_holes_dim_param_limits(sample_singlelabel_segmentation):
 def test_fill_holes_dim_param_hole_mgnitude(sample_singlelabel_segmentation):
     """
     Giving a single-label segmentation to the fill_holes function, and calling 
-    teh function once with a dim parameter of 1 and once with a dim parameter of 3
+    the function once with a dim parameter of 1 and once with a dim parameter of 2
 
     tests:
-    - If for the output of the function with the dim parameter of 3 the number of
+    - If for the output of the function with the dim parameter of 2 the number of
     0 labels is higher than for the output with a dim parameter of 1 
     """
 
