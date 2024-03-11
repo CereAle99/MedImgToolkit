@@ -18,12 +18,18 @@ from lib.binarize import binarize
 
 @pytest.fixture
 def sample_singlelabel_segmentation():
+    """
+    Fixture: Load a NIfTI segmentation with one single label number
+    """
     sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii.gz')
     return nib.load(sample_file_path)
 
 
 @pytest.fixture
 def sample_multilabel_segmentation():
+    """
+    Fixture: Load a NIfTI segmentation with multiple label numbers
+    """
     sample_file_path = os.path.join('data', 'segmentation.nii.gz')
     return nib.load(sample_file_path)
 
@@ -31,8 +37,8 @@ def sample_multilabel_segmentation():
 @pytest.fixture
 def sample_image_multi_012():
     """
-    Create a 3x3x3 cube with with labels 0, 1, and 2.
-    Put it in a NiftiImage instance
+    Fixture: Load a NIfTI 3x3x3 cube with labels 0, 1, or 2 in each 
+    horizontal layer
     """
     data = np.zeros((3, 3, 3), dtype=np.uint8)
     data[1,:,:] = 1
@@ -46,8 +52,7 @@ def sample_image_multi_012():
 @pytest.fixture
 def sample_image_multi_100():
     """
-    Create a 3x3x3 cube with with labels 0, 1, and 2.
-    Put it in a NiftiImage instance
+    Fixture: Load a NIfTI 3x3x3 cube with label 1 in the first layer
     """
     data = np.zeros((3, 3, 3), dtype=np.uint8)
     data[0,:,:] = 1
@@ -59,10 +64,12 @@ def sample_image_multi_100():
 
 def test_binarize_returns_nifti1image(sample_multilabel_segmentation):
     """
-    Tests:
+    Giving to the binarize function a NiftiImage instance
+
+    tests:
     If the output is a NiftiImage instance
     If the input image has the same resolution of the output image
-    If the datatype of the output image is binary
+    If the datatype of the output image is made of np.unit8 numbers
     """
     result = binarize(sample_multilabel_segmentation)
     result_array = result.get_fdata()
@@ -75,8 +82,10 @@ def test_binarize_returns_nifti1image(sample_multilabel_segmentation):
 
 def test_binarize_single_label(sample_singlelabel_segmentation):
     """
-    Tests:
-    If the output of a single-label mask is binary
+    Giving a single label segmentation to the binarize function 
+
+    tests:
+    If the datatype of the output image is made of np.unit8 numbers
     """
     binarized_image = binarize(sample_singlelabel_segmentation, 1)
 
@@ -86,8 +95,10 @@ def test_binarize_single_label(sample_singlelabel_segmentation):
     
 def test_binarize_empty_input():
     """
-    Tests:
-    If the function gets an empty input
+    Giving an empty segmentation to the binarize function 
+
+    tests:
+    If the function gets an empty input and raises an error
     """
 
     empty_image = nib.Nifti1Image(np.zeros((100, 100, 100)), np.eye(4))
@@ -96,13 +107,17 @@ def test_binarize_empty_input():
         binarize(empty_image, label=1)
 
 
-def test_binarize_no_labels_match(sample_singlelabel_segmentation):
+def test_binarize_no_labels_match(sample_multilabel_segmentation):
     """
-    Tests:
-    If the binary mask is empty when giving a non-present label
+    Giving a multi-label segmentation to the binarize function 
+    and specifying as input a label which is not present between 
+    the labels of the input image
+
+    tests:
+    If the output image is empty 
     """
     non_existing_label = 90
-    binarized_image = binarize(sample_singlelabel_segmentation, non_existing_label)
+    binarized_image = binarize(sample_multilabel_segmentation, non_existing_label)
     binary_mask = binarized_image.get_fdata()
 
     # Assert that 
@@ -111,11 +126,11 @@ def test_binarize_no_labels_match(sample_singlelabel_segmentation):
 
 def test_binarize_label_zero(sample_image_multi_012, sample_image_multi_100):
     """
-    Binarize function gets as input a multilabel segmentation and a label=0
+    Giving a multi-label segmentation and specifying as input a label of 0
 
-    Tests:
+    tests:
     If the output segmentation has 0s where befor it had other labels and 
-    1s where it had 0s.
+    1s where it had 0s
     """
 
     binarized_image = binarize(sample_image_multi_012, 0)
