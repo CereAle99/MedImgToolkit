@@ -51,8 +51,11 @@ def cylinder(input_image, dilations=0):
     for i in range(image.shape[0]):
         for j in range(image.shape[1]):
             point = np.array([i, j])
-            if np.linalg.norm(cylinder_center - point) < cylinder_radius:
-                image[i, j, k_min:k_max+1] = 1
+            if np.linalg.norm(cylinder_center - point) <= cylinder_radius:
+                if k_max == image.shape[2]:
+                    image[i, j, k_min:] = 1
+                else:
+                    image[i, j, k_min:k_max+1] = 1
 
     # Put the image in a nibabel object
     output_image = nib.Nifti1Image(image, input_image.affine, input_image.header)
