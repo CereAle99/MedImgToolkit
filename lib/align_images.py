@@ -86,7 +86,6 @@ def align_images(input_image, reference_image):
     # Evaluate the offset and shift the input image
     axis_directions = np.array([-x_orientation, -y_orientation, -z_orientation])
     shift_vector = (ref_affine[0:3, 3] - img_affine[0:3, 3]) / np.abs(np.diag(img_affine)[0:3]) * axis_directions
-    print(shift_vector)
     img_array = shift(img_array, shift_vector, mode="constant", cval=0)
 
     # Fix the input image offset
