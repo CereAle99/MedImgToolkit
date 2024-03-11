@@ -16,6 +16,9 @@ from lib.dilate import dilate
 
 @pytest.fixture
 def sample_singlelabel_segmentation():
+    """
+    Fixture: Load a NIfTI segmentation with one single label number.
+    """
     sample_file_path = os.path.join('data', 'segmentation_singlelabel.nii.gz')
     return nib.load(sample_file_path)
 
@@ -23,8 +26,8 @@ def sample_singlelabel_segmentation():
 @pytest.fixture
 def sample_image_center_pixel():
     """
-    Create a 5x5x5 cube with a center made of 1s with borders made of 0s
-    Put it in a NIfTI image.
+    Fixture: Load a NIfTI 5x5x5 cubic image with 1 in the center and the 
+    other voxels made of 0s
     """
     data = np.zeros((5, 5, 5), dtype=np.uint8)
     data[2, 2, 2] = 1 
@@ -37,8 +40,8 @@ def sample_image_center_pixel():
 @pytest.fixture
 def sample_image_center_big_cross():
     """
-    Create a 9x9x9 cube with a Central cubic core with removed 
-    corners and diagonal and vertical bars. Put it in a NIfTI image.
+    Fixture: load a NIfTI 5x5x5 cubic array with a central 5x5x5 cross 
+    made of 1s in the center and the other voxels made of 0s.
     """
     data = np.zeros((5, 5, 5), dtype=int)
     data[1:4, 1:4, 1:4] = 1
@@ -66,17 +69,17 @@ def sample_image_center_big_cross():
 @pytest.fixture
 def sample_image_center_cross():
     """
-    Create a 9x9x9 cube with a center made of 1s with borders made of 0s
-    Put it in a NIfTI image.
+    Fixture: load a NIfTI 5x5x5 cubic array with a central 3x3x3 cross 
+    made of 1s in the center and the other voxels made of 0s.
     """
     data = np.zeros((5, 5, 5), dtype=int)
-    data[2, 2, 2] = 1.
-    data[2, 2, 1] = 1.
-    data[2, 2, 3] = 1.
-    data[2, 1, 2] = 1.
-    data[2, 3, 2] = 1.
-    data[1, 2, 2] = 1.
-    data[3, 2, 2] = 1.
+    data[2, 2, 2] = 1
+    data[2, 2, 1] = 1
+    data[2, 2, 3] = 1
+    data[2, 1, 2] = 1
+    data[2, 3, 2] = 1
+    data[1, 2, 2] = 1
+    data[3, 2, 2] = 1
 
     nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
 
@@ -85,10 +88,12 @@ def sample_image_center_cross():
 
 def test_dilate_returns_nifti1image(sample_singlelabel_segmentation):
     """
-    Tests:
-    If the output is a NiftiImage instance
-    If the input image has the same resolution of the output image
-    If the datatype of the output image is binary
+    Giving to the dilate function a NiftiImage instance
+
+    tests:
+    - If the output is a NiftiImage instance
+    - If the input image has the same resolution of the output image
+    - If the datatype of the output image is made of np.unit8 numbers
     """
     result = dilate(sample_singlelabel_segmentation)
     result_data = result.get_fdata()
@@ -101,8 +106,10 @@ def test_dilate_returns_nifti1image(sample_singlelabel_segmentation):
 
 def test_dilate_empty_input():
     """
-    Tests:
-    If the function gets an empty input
+    Giving an empty segmentation to the dilate function
+    tests:
+    - If the function raises a ValueError with the message
+    "Input file is empty."
     """
 
     empty_image = nib.Nifti1Image(np.zeros((100, 100, 100)), np.eye(4))
@@ -113,8 +120,11 @@ def test_dilate_empty_input():
 
 def test_dilate_encloses_mask(sample_singlelabel_segmentation):
     """
-    Tests:
-    If the output encloses the input image
+    Giving a single-label segmentation to the dilate function
+
+    tests:
+    - If the output image encloses the input image, that means that all the 
+    voxel having 1s in the input image are 1s also in the output image
     """
 
     dilate_mask = dilate(sample_singlelabel_segmentation).get_fdata()
@@ -125,8 +135,10 @@ def test_dilate_encloses_mask(sample_singlelabel_segmentation):
 
 def test_dilate_output_differs_from_input(sample_singlelabel_segmentation):
     """
-    Tests:
-    If input and output are different
+    Giving a single-label segmentation to the dilate function
+
+    tests:
+    - If input and output are different images
     """
     input_image = sample_singlelabel_segmentation.get_fdata()
     output_image = dilate(sample_singlelabel_segmentation)
@@ -136,8 +148,12 @@ def test_dilate_output_differs_from_input(sample_singlelabel_segmentation):
 
 def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
     """
-    Tests:
-    If giving 0 as structuring element raises an error
+    Giving a single-label segmentation to the dilate function and 0 as 
+    iteration paramenter
+    
+    tests:
+    - If the function raises a ValueError with the message 
+    "Dim 0 for the structuring element."
     """
 
     with pytest.raises(ValueError, match="Dim 0 for the structuring element"):
@@ -146,20 +162,30 @@ def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
 
 def test_dilate_iterations_param_limits(sample_singlelabel_segmentation):
     """
-    Tests:
-    If the output for a higher interation parameter encloses the one with a lower one
+    Giving a single-label segmentation to the dilate function, and evaluating
+    once with an iteration parameter 1 and once with a parameter 2
+
+    tests:
+    - If the outputs of the two cases are different images
+    - If the output image with an iteration parameter of 2 encloses the other,
+    that means that all the voxel having 1s in the input image are 1s also 
+    in the output image 
     """
 
     dilate_dim_1 = dilate(sample_singlelabel_segmentation, iterations=1).get_fdata()
     dilate_dim_2 = dilate(sample_singlelabel_segmentation, iterations=2).get_fdata()
 
+    assert np.any(dilate_dim_1 != dilate_dim_2)
     assert np.all(np.logical_or(np.equal(dilate_dim_2, dilate_dim_1), dilate_dim_2))
 
 
 def test_dilate_segmentation_is_bigger(sample_singlelabel_segmentation):
     """
-    Tests:
-    If there are more labels in the output image than in the input
+    Givin a single-label segmentation to the dilate function
+
+    tests:
+    If the sum of the labels in the output image is greater than in the 
+    input image
     """
 
     input_mask = sample_singlelabel_segmentation.get_fdata()
@@ -170,12 +196,11 @@ def test_dilate_segmentation_is_bigger(sample_singlelabel_segmentation):
 
 def test_dilate_dilating_pixel(sample_image_center_pixel, sample_image_center_cross):
     """
-    The dilate function get as input a 5x5x5 nibabel image with just a 
-    certral pixel.
+    Giving a 5x5x5 single-label segmentation with a 1 in the central voxel and 0s
+    in the others to the dilation function
 
-    Tests:
-    If the output of the dilation is an identical image with a 3x3x3
-    centered cross.
+    tests:
+    - If the output image represents a 3x3x3 centered cross
     """
 
     dilate_mask = dilate(sample_image_center_pixel).get_fdata()
@@ -186,12 +211,12 @@ def test_dilate_dilating_pixel(sample_image_center_pixel, sample_image_center_cr
 
 def test_dilate_dilating_pixel_2(sample_image_center_pixel, sample_image_center_big_cross):
     """
-    The dilate function get as input a 5x5x5 nibabel image with just a 
-    certral pixel.
+    Giving a 5x5x5 single-label segmentation with a 1 in the central 
+    voxel and 0s in the others to the dilation function
 
-    Tests:
-    If the output of the dilation is an identical image with a 5x5x5 
-    central cubic core with removed corners and diagonal and vertical bars.
+    tests:
+    - If the output of the dilation represents a 5x5x5 
+    asterisk shaped image
     """
 
     dilate_mask = dilate(sample_image_center_pixel, iterations=2).get_fdata()
