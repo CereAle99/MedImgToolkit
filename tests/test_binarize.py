@@ -98,7 +98,8 @@ def test_binarize_empty_input():
     Giving an empty segmentation to the binarize function 
 
     tests:
-    If the function gets an empty input and raises an error
+    If the function raises a ValueError with the message
+    "Input file is empty."
     """
 
     empty_image = nib.Nifti1Image(np.zeros((100, 100, 100)), np.eye(4))
