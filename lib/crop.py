@@ -5,7 +5,7 @@ from lib.cylinder import cylinder
 from lib.binarize import binarize
 
 
-def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d_iterations=3, d_filling=True, d_dilations=3, c_dilations=3):
+def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d_iterations=3, d_filling=False, d_dilations=3, c_dilations=3):
     """
     Takes an image and its segmentation, binarizes it for a specific label,
     shapes the binary mask according to the "shape" parameter, and performs
