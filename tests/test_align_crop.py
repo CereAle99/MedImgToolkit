@@ -34,15 +34,164 @@ def sample_medical_image():
     return nib.load(sample_file_path)
 
 
+@pytest.fixture
+def sample_image_center_50_others():
+    """
+    Fixture: load a NIfTI 5x5x5 cubic array with 1 in the center and the 
+    other voxels made of 0s
+    """
+    data = np.random.randint(0, 10, size=(5, 5, 5), dtype=int)
+    data[2, 2, 2] = 50
 
-def test_crop_invalid_shape(sample_medical_image, sample_multilabel_segmentation):
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+
+@pytest.fixture
+def sample_image_center_50():
+    """
+    Fixture: load a NIfTI 5x5x5 cubic array with 1 in the center and the 
+    other voxels made of 0s
+    """
+    data = np.zeros((5, 5, 5), dtype=np.uint8)
+    data[3, 3, 3] = 50
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+@pytest.fixture
+def sample_image_center_pixel():
+    """
+    Fixture: load a NIfTI 5x5x5 cubic array with 1 in the center and the 
+    other voxels made of 0s
+    """
+    data = np.zeros((5, 5, 5), dtype=np.uint8)
+    data[2, 2, 2] = 1
+
+    nifti_image = nib.Nifti1Image(data, affine=np.eye(4))
+
+    return nifti_image
+
+@pytest.fixture
+def sample_image_center_pixel_double():
+    """
+    Fixture: load a NIfTI 10x10x10 cubic array with 1 in the 2x2x2 centered
+    cube and the other voxels made of 0s
+    """
+    data = np.zeros((10, 10, 10), dtype=np.uint8)
+    data[4:6, 4:6, 4:6] = 1 
+
+    affine=np.eye(4)
+    for i in range(3):
+        affine[i,i] = 0.5
+    affine[:3, 3] = [-0.25, -0.25, -0.25]
+    nifti_image = nib.Nifti1Image(data, affine=affine)
+
+    return nifti_image
+
+@pytest.fixture
+def sample_image_center_pixel_double_50():
+    """
+    Fixture: load a NIfTI 10x10x10 cubic array with 1 in the 2x2x2 centered
+    cube and the other voxels made of 0s
+    """
+    data = np.zeros((10, 10, 10), dtype=np.uint8)
+    data[4:6, 4:6, 4:6] = 50
+
+    affine=np.eye(4)
+    for i in range(3):
+        affine[i,i] = 0.5
+    affine[:3, 3] = [-0.25, -0.25, -0.25]
+    nifti_image = nib.Nifti1Image(data, affine=affine)
+
+    return nifti_image
+
+@pytest.fixture
+def sample_image_segm_to_align():
+    """
+    Fixture: load a NIfTI 5x5x5 cubic array with an uncentered voxel with of 1
+    and the other voxels made of 0s. The NIfTI offset is set to the point 
+    (-1,-1,-1)
+    """
+    data = np.zeros((5, 5, 5), dtype=np.uint8)
+    data[3, 3, 3] = 1 
+
+    affine=np.eye(4)
+    affine[:3, 3] = [-1, -1, -1]
+    nifti_image = nib.Nifti1Image(data, affine=affine)
+
+    return nifti_image
+
+
+def test_alignment_crop_returns_nifti1image(sample_medical_image, sample_multilabel_segmentation):
+    """
+    Giving to the alignment_crop function a NiftiImage instance
+
+    tests:
+    - If the output is a NiftiImage instance
+    - If the input image has the same resolution of the output image
+    """
+    image, mask = alignment_crop(sample_medical_image, sample_multilabel_segmentation)
+    image_array = image.get_fdata()
+    mask_array = mask.get_fdata()
+
+    assert isinstance(image, nib.Nifti1Image)
+    assert isinstance(mask, nib.Nifti1Image)
+    assert image_array.shape == mask_array.shape
+
+
+def test_align_crop_invalid_shape(sample_medical_image, sample_multilabel_segmentation):
     """
     Gets as input an image and a multilabel segmentation, and the invalid 
     shape "wrong" is passed.
 
-    Tests:
-    If the function gets an invalid shape, and raises an error.
+    tests:
+    - If the function raises a ValueError with the message
+    "Shape invalid."
     """
 
     with pytest.raises(ValueError, match="Shape invalid."):
         alignment_crop(sample_medical_image, sample_multilabel_segmentation, 'wrong')
+
+
+def test_align_crop_with_shift(sample_image_center_50_others, 
+                             sample_image_segm_to_align,
+                             sample_image_center_50
+                             ):
+    """
+    Gets as input an image and a multilabel segmentation, and the invalid 
+    shape "wrong" is passed.
+
+    tests:
+    - If the function raises a ValueError with the message
+    "Shape invalid."
+    """
+
+    image, segm = alignment_crop(sample_image_center_50_others, sample_image_segm_to_align, 'original', label=1)
+    image = image.get_fdata()
+    segm = segm.get_fdata()
+   
+    assert np.all(np.round(image) == sample_image_center_50.get_fdata())
+
+
+def test_align_crop_with_zoom(sample_image_center_50_others, 
+                             sample_image_center_pixel_double,
+                             sample_image_center_pixel_double_50
+                             ):
+    """
+    Gets as input an image and a multilabel segmentation, and the invalid 
+    shape "wrong" is passed.
+
+    tests:
+    - If the function raises a ValueError with the message
+    "Shape invalid."
+    """
+
+    image, segm = alignment_crop(sample_image_center_50_others, sample_image_center_pixel_double, 'original', label=1)
+    image = image.get_fdata()
+    segm = segm.get_fdata()
+    image[image>10] = 50
+    
+    assert np.all(np.round(image) == sample_image_center_pixel_double_50.get_fdata())
