@@ -17,7 +17,7 @@ def crop(input_nifti, mask, shape="original", label=1, f_dim=3, f_dilations=3, d
             imput object to be shaped
         mask: nib
             segmentation object selecting the area to crop
-        shape: choices: {'original', 'fill_holes', 'dilation', 'cylinder'}
+        shape: choices: {'original', 'fill_holes', 'dilate', 'cylinder'}
             selection of the shape for the image to be cropped. Default is
             'original'
         label: float or int
