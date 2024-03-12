@@ -134,7 +134,6 @@ def test_align_images_expected_alignment(sample_image_center_pixel, sample_image
     image_nifti, segm_nifti = align_images(sample_image_center_pixel, sample_image_segm_to_align)
     image = image_nifti.get_fdata()
     segm = segm_nifti.get_fdata()
-    print(segm)
     print(np.round(image))
 
     assert np.all(np.round(image) == segm)
