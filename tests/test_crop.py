@@ -151,19 +151,20 @@ def test_crop_the_right_part(sample_image_center_50_others,
                              sample_image_center_cross_50
                              ):
     """
-    Gets as input an image and a multilabel segmentation, and the invalid 
-    shape "wrong" is passed.
+    Giving a NIfTI 5x5x5 cubic array with 50 in the center and the 
+    other voxels made random numbers uniformly distributed between 0 and 10
+    and a NIfTI 10x10x10 cubic array with 1 in the 2x2x2 centered
+    cube and the other voxels made of 0s with an offset of 
+    (-0.25, -0.25, -0.25) to the alignment_crop function
 
     tests:
-    - If the function raises a ValueError with the message
-    "Shape invalid."
+    - If the output image is a NIfTI 10x10x10 cubic array with 50 in the 
+    2x2x2 centered cube and the other voxels made of 0s
     """
 
     image, segm = crop(sample_image_center_50_others, sample_image_center_pixel, 'dilate', label=1, d_iterations=1)
     image = image.get_fdata()
     segm = segm.get_fdata()
-    print(image)
-    print(sample_image_center_cross_50.get_fdata())
    
     assert np.all(segm == sample_image_center_cross.get_fdata())
     assert np.all(image == sample_image_center_cross_50.get_fdata())
